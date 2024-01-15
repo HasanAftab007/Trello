@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
 
 class User extends Authenticatable
 {
@@ -40,6 +42,9 @@ class User extends Authenticatable
 
     public function columns() {
         return $this->hasMany(Column::class);
+    }
+    public function cards() {
+        return $this->hasMany(Card::class);
     }
 
 }

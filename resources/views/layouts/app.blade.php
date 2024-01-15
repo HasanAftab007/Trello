@@ -11,6 +11,7 @@
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet"/>
     <script src="https://kit.fontawesome.com/44c66588f6.js" crossorigin="anonymous"></script>
+
     <!-- Scripts -->
     @livewireStyles
     @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -37,5 +38,9 @@
 </div>
 @include('sweetalert::alert')
 @livewireScripts
+<script>
+    var uploadImgUrl = '{{route('store.image')}}';
+    {{--var uploadImgUrl = '{{route('store.image', ['_token' => csrf_token()])}}';--}}
+</script>
 </body>
 </html>

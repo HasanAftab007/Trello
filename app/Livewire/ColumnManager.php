@@ -10,20 +10,38 @@ use RealRashid\SweetAlert\Facades\Alert;
 
 class ColumnManager extends Component
 {
-
+    public $columnId, $cardId = '';
+    public $cardDescription = '';
+    public $cardActivity = '';
     public $cardTitle = '';
     public $cardTitleId = '';
     public $columnCardIds = [];
     public $columns = '';
     public $columnTitleInputs = [];
     public $focusedColumnId = '';
-    #[Validate('required', message: 'Please enter the title!')]
-    #[Validate('string', message: 'Only letters are acceptable')]
     public $columnTitle = '';
     #[Validate('string', message: 'Only letters are acceptable')]
     public $columnTitleInput = '';
-    protected $user;
 
+    public function updatedCardDescription() {
+        $cardDescription = preg_replace('/<figure[^>]*>.*?<\/figure>/', '', $this->cardDescription);
+        $card = Card::where('id', $this->cardId)->where('user_id', auth()->id())->where('column_id', $this->columnId)->first();
+        if ($cardDescription && $card) {
+            $card->update(['description' => $cardDescription]);
+        } else {
+            $card->update(['description' => NULL]);
+        }
+    }
+
+    public function updatedCardActivity() {
+        $cardActivity = preg_replace('/<figure[^>]*>.*?<\/figure>/', '', $this->cardActivity);
+        $card = Card::where('id', $this->cardId)->where('user_id', auth()->id())->where('column_id', $this->columnId)->first();
+        if ($cardActivity && $card) {
+            $card->update(['activity' => $cardActivity]);
+        } else {
+            $card->update(['activity' => NULL]);
+        }
+    }
 
     public function editCardTitle($columnId, $cardId) {
         $card = Card::where('user_id', auth()->id())->where('column_id', $columnId)->where('id', $cardId)->first();
@@ -44,14 +62,14 @@ class ColumnManager extends Component
             'column_id' => $columnId,
             'title' => $this->cardTitle
         ]);
+        $this->reset('cardTitle');
+        $this->dispatch('reset-card-title');
     }
 
-
     public function createColumn() {
-        $this->validate();
-        $this->user = auth()->user();
+        $this->validate(['columnTitle' => 'required|string']);
         Column::create([
-            'user_id' => $this->user->id,
+            'user_id' => auth()->id(),
             'title' => $this->columnTitle
         ]);
         Alert::success('Success Title', 'Success Message');
@@ -65,6 +83,7 @@ class ColumnManager extends Component
     }
 
     public function editColumnTitle($columnId) {
+        $this->validate(['columnTitleInput' => 'required']);
         $column = Column::where('id', $columnId)->where('user_id', auth()->id())->first();
         if ($column && $columnId === $this->focusedColumnId) {
             $column->update(['title' => $this->columnTitleInput]);

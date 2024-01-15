@@ -23,6 +23,10 @@ class ColumnManager extends Component
     #[Validate('string', message: 'Only letters are acceptable')]
     public $columnTitleInput = '';
 
+    public function mount() {
+        $this->dispatch('rerender-ckeditor');
+    }
+
     public function updatedCardDescription() {
         $cardDescription = preg_replace('/<figure[^>]*>.*?<\/figure>/', '', $this->cardDescription);
         $card = Card::where('id', $this->cardId)->where('user_id', auth()->id())->where('column_id', $this->columnId)->first();
@@ -64,6 +68,10 @@ class ColumnManager extends Component
         ]);
         $this->reset('cardTitle');
         $this->dispatch('reset-card-title');
+    }
+
+    public function updatedCardTitle() {
+        $this->dispatch('rerender-ckeditor');
     }
 
     public function createColumn() {

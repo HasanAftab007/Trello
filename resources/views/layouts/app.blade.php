@@ -40,7 +40,6 @@
 @livewireScripts
 <script>
     var uploadImgUrl = '{{route('store.image')}}';
-    {{--var uploadImgUrl = '{{route('store.image', ['_token' => csrf_token()])}}';--}}
 </script>
 </body>
 </html>

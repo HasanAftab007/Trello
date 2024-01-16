@@ -27,6 +27,14 @@ class ColumnManager extends Component
         $this->dispatch('rerender-ckeditor');
     }
 
+    public function updateCardPosition($columnId, $cardId) {
+        $userId = auth()->id();
+        $card = Card::where('user_id', $userId)->where('id', $cardId)->first();
+        if ($card) {
+            $card->update(['column_id' => $columnId]);
+        }
+    }
+
     public function updatedCardDescription() {
         $cardDescription = preg_replace('/<figure[^>]*>.*?<\/figure>/', '', $this->cardDescription);
         $card = Card::where('id', $this->cardId)->where('user_id', auth()->id())->where('column_id', $this->columnId)->first();

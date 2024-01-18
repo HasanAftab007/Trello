@@ -12,7 +12,7 @@ class Card extends Model implements HasMedia
 {
     use HasFactory, InteractsWithMedia;
 
-    protected $fillable = ['user_id', 'column_id', 'title', 'description', 'activity'];
+    protected $fillable = ['user_id', 'column_id', 'title', 'description', 'activity', 'position'];
 
     public function registerMediaConversions(Media $media = null): void {
         $this->addMediaConversion('thumb')

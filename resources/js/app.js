@@ -2,6 +2,7 @@ import './bootstrap';
 import $ from "jquery";
 import Alpine from 'alpinejs';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import 'livewire-sortable';
 
 window.Alpine = Alpine;
 
@@ -10,6 +11,7 @@ Alpine.start();
 window.$ = window.jQuery = $;
 
 Livewire.on('rerender-ckeditor', function () {
+
     $(function () {
         class MyUploadAdapter {
             constructor(loader, columnId) {
@@ -48,6 +50,7 @@ Livewire.on('rerender-ckeditor', function () {
                 xhr.addEventListener('error', () => reject(genericErrorText));
                 xhr.addEventListener('abort', () => reject());
                 xhr.addEventListener('load', () => {
+
                     const response = xhr.response;
 
                     if (!response || response.error) {
@@ -56,7 +59,9 @@ Livewire.on('rerender-ckeditor', function () {
                     resolve({
                         default: response.url
                     });
+
                 });
+
                 if (xhr.upload) {
                     xhr.upload.addEventListener('progress', evt => {
                         if (evt.lengthComputable) {
@@ -65,6 +70,7 @@ Livewire.on('rerender-ckeditor', function () {
                         }
                     });
                 }
+
             }
 
             _sendRequest(file) {
@@ -94,21 +100,31 @@ Livewire.on('rerender-ckeditor', function () {
         var ck5Elements = $('.ck5');
 
         ck5Elements.each(function (index, element) {
-            ClassicEditor.create(element, {
-                extraPlugins: [SimpleUploadAdapterPlugin],
-            }).then((editor) => {
-                editor.model.document.on('change:data', () => {
-                    let componentId = Livewire.getByName('column-manager')[0].id;
-                    let elementId = editor.sourceElement.getAttribute('id');
-                    if (elementId === 'cardDescription') {
-                        Livewire.find(componentId).set('cardDescription', editor.getData());
-                    } else if (elementId === 'cardActivity') {
-                        Livewire.find(componentId).set('cardActivity', editor.getData());
-                    }
-                })
-            }).catch(error => {
-                console.error(error);
-            });
+
+            if (!element.hasAttribute('ckeditor-initialized')) {
+
+                element.setAttribute('ckeditor-initialized', 'true');
+
+                ClassicEditor.create(element, {
+
+                    extraPlugins: [SimpleUploadAdapterPlugin],
+
+                }).then((editor) => {
+
+                    editor.model.document.on('change:data', () => {
+
+                        let componentId = Livewire.getByName('column-manager')[0].id;
+                        let elementId = editor.sourceElement.getAttribute('id');
+
+                        if (elementId === 'cardDescription') {
+                            Livewire.find(componentId).set('cardDescription', editor.getData());
+                        } else if (elementId === 'cardActivity') {
+                            Livewire.find(componentId).set('cardActivity', editor.getData());
+                        }
+
+                    });
+                });
+            }
         });
     });
 });

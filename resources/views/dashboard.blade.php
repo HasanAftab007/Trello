@@ -5,6 +5,6 @@
         </h3>
     </x-slot>
 
-    <livewire:column-manager/>
+    <livewire:column-manager lazy/>
 
 </x-app-layout>

@@ -22,9 +22,3 @@ Route::middleware('auth')->group(function () {
 });
 
 require __DIR__ . '/auth.php';
-
-
-Route::any('dd', function () {
-    alert()->success('Title', 'Lorem Lorem Lorem');
-    Alert::success('Success Title', 'Success Message');
-});

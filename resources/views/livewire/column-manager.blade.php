@@ -1,4 +1,5 @@
 <div x-init="console.log('hasan')" x-data="{ columnTitleInputs: @js($columnTitleInputs) }">
+
     <div class="ms-5 mt-4 flex gap-4 max-h-auto" wire:sortable="sortColumn">
 
         {{--All Columns--}}
@@ -396,6 +397,12 @@
                 </div>
 
             </div>
+
         </div>
+
+        {{--Dump DB Button--}}
+        <livewire:dump-d-b/>
+
     </div>
+
 </div>

@@ -18,4 +18,21 @@ class HomeController extends Controller
         }
     }
 
+    public function planSubscription(Request $request) {
+        $user = $request->user();
+        $paymentMethod = $request->get('payment_method');
+        $planId = $request->get('plan_price_id');
+        $user->createOrGetStripeCustomer();
+        $user->addPaymentMethod($paymentMethod);
+        try {
+            $user->newSubscription('default', $planId)
+                ->create($paymentMethod, [
+                    'email' => $user->email
+                ]);
+        } catch (\Exception $e) {
+            dd($e->getMessage());
+        }
+
+        return to_route('dashboard');
+    }
 }

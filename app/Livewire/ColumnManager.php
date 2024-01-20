@@ -120,12 +120,6 @@ class ColumnManager extends Component
 
         $this->validate(['columnTitle' => 'required|string']);
 
-        $user = auth()->user();
-        $totalColumnsCreatedByUser = auth()->user()->columns()->count();
-        if (!$user->subscribed() && $totalColumnsCreatedByUser > 0) {
-            return to_route('subscription-plan');
-        }
-
         $position = Column::max('position') ?? 'zero';
         if ($position === 'zero') {
             $position = 0;
@@ -133,7 +127,7 @@ class ColumnManager extends Component
         $position++;
 
         Column::create([
-            'user_id' => $user->id,
+            'user_id' => auth()->id(),
             'title' => $this->columnTitle,
             'position' => $position
         ]);
